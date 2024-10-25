@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ printf "%s-ingress" .Values.application.name }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.ip.name }}
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.allow-http: "true"
+    {{- if .Values.certificate.enabled }}
+    cert-manager.io/cluster-issuer: letsencrypt-ssl-provider
+    {{- end }}
+spec:
+  {{- if .Values.certificate.enabled }}
+  tls:
+  - hosts:
+        {{- range $value := .Values.hostnames }}
+        - {{ . }}
+        {{- end }}
+    secretName: {{ .Values.certificate.secret }}
+  {{- end }}
+  rules:
+  {{- range $value := .Values.hostnames }}
+  - host: {{ . }}
+    http:
+      paths:
+       - path: /*
+         pathType: ImplementationSpecific
+         backend:
+          service:
+             name: {{ printf "%s-service" $.Values.application.name }}
+             port:
+               number: {{ $.Values.service.port }}
+  {{- end }}
+status:
+  loadBalancer:
+    ingress:
+    - ip: {{ .Values.ingress.ip.name }}
+---

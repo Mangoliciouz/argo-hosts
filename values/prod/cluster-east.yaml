@@ -1,0 +1,4 @@
+hostnames:
+  - hostname1-east.example.com
+  - hostname2-east.example.com
+  - hostname3-east.example.com

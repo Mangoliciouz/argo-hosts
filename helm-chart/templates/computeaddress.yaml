@@ -1,0 +1,13 @@
+{{- if .Values.ingress.ip.enabled }}
+apiVersion: compute.cnrm.cloud.google.com/v1beta1
+kind: ComputeAddress
+metadata:
+  name: {{ .Values.ingress.ip.name }}
+  annotations:
+    cnrm.cloud.google.com/project-id: {{ .Values.project }}
+spec:
+  addressType: EXTERNAL
+  location: global
+  networkTier: PREMIUM
+{{- end }}
+---

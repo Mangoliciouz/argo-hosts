@@ -1,0 +1,4 @@
+hostnames:
+  - hostname1-eu.example.com
+  - hostname2-eu.example.com
+  - hostname3-eu.example.com
